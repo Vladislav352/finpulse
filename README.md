@@ -1,5 +1,11 @@
 # Фин.пульс: финансовый дашборд продавца на маркетплейсах
 
+![Фин.пульс](docs/banner.svg)
+
+![Python](https://img.shields.io/badge/Python-stdlib-4d8dff?style=flat-square&labelColor=1b2330) ![обновление](https://img.shields.io/badge/обновление-2_раза_в_день-8a63f7?style=flat-square&labelColor=1b2330) ![страница](https://img.shields.io/badge/страница-50_КБ-4d8dff?style=flat-square&labelColor=1b2330) ![статус](https://img.shields.io/badge/статус-в_продакшене-8a63f7?style=flat-square&labelColor=1b2330)
+
+**[Страница проекта](https://vladislav352.github.io/finpulse/)** · [Живое демо](https://vladislav352.github.io/finpulse/demo/)
+
 > Конвейер «API аналитики → Google-таблица → HTML-дашборд → сайт» для руководителя и финдиректора: выручка, маржинальность, рентабельность себестоимости, ДРР, выплаты на расчётный счёт, остатки и товар в пути. Python stdlib, без фреймворков, обновляется дважды в день по launchd.
 >
 > *Finance pulse for a marketplace seller: TrueStats API → Google Sheets (canon table) → static HTML dashboard → hosting. Pure Python, no dependencies, runs twice a day.*
@@ -23,13 +29,17 @@
 
 ## Как устроено
 
-```
-launchd 07:40 и 13:40
-  └─ run_finpulse.py
-       ├─ truestats_pull.py   TrueStats API → листы TS_факт_SKU, TS_кабинеты, TS_месяцы, TS_остатки, TS_лог
-       ├─ onec_pull.py        1С (OData, только GET) → остатки склада фулфилмента
-       ├─ build_finpulse.py   JSON-срез + план из Google Sheets → finpulse.html (SVG-графики без JS-библиотек)
-       └─ ftp_deploy.py       зеркалирование на хостинг по FTPS (или rsync по SSH)
+```mermaid
+flowchart LR
+  L[launchd 07:40 и 13:40] --> R[run_finpulse.py]
+  R --> T[truestats_pull.py<br/>факт по SKU, кабинетам, месяцам, остаткам]
+  R --> O[onec_pull.py<br/>1С OData, только GET]
+  T --> GS[(Google-таблица<br/>листы TS_…)]
+  O --> GS
+  GS --> B[build_finpulse.py<br/>план + факт → finpulse.html]
+  T --> B
+  B --> F[ftp_deploy.py<br/>FTPS-зеркало]
+  F --> S[сайт под паролем]
 ```
 
 - `truestats_pull.py`: четыре периода (текущий месяц и три полных), 60 запросов в минуту, полная перезапись листов `TS_…`, лог в отдельный лист таблицы.
