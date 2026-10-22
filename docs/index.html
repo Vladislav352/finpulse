@@ -1,0 +1,32 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Фин.пульс · Vladislav352</title><meta name="description" content="Выручка, маржа, рентабельность, ДРР и выплаты по пяти кабинетам маркетплейсов. TrueStats API, Google-таблица, один HTML.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%234d8dff'/%3E%3Cstop offset='1' stop-color='%238a63f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://vladislav352.github.io/assets/site.css"><script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
+const dark=true;
+mermaid.initialize({startOnLoad:true,theme:'base',securityLevel:'loose',themeVariables:{
+ fontFamily:'"Golos Text",sans-serif',fontSize:'14px',
+ primaryColor:dark?'#1b2330':'#ffffff',primaryTextColor:dark?'#e8ecf2':'#131922',primaryBorderColor:'#4d8dff',
+ lineColor:dark?'#8a63f7':'#6b4fe0',secondaryColor:dark?'#141a22':'#e9edf3',tertiaryColor:dark?'#0e1116':'#f3f5f8',
+ clusterBkg:dark?'#141a22':'#f3f5f8',clusterBorder:dark?'#303b4b':'#c9d2de',edgeLabelBackground:dark?'#141a22':'#ffffff',
+ noteBkgColor:dark?'#1b2330':'#e9edf3',noteTextColor:dark?'#e8ecf2':'#131922'}});
+</script></head><body><nav class="nav"><div class="wrap"><a class="brand" href="https://vladislav352.github.io/"><i></i>Vladislav352</a>
+<div class="nav-links"><a href="https://vladislav352.github.io/#projects">Проекты</a><a href="https://vladislav352.github.io/#about">Обо мне</a><a href="https://github.com/Vladislav352">GitHub</a></div></div></nav>
+<header class="wrap hero"><div><h1>Финансовый дашборд продавца <em>дважды в день</em></h1><p>Выручка, маржа, рентабельность, ДРР и выплаты по пяти кабинетам маркетплейсов. TrueStats API, Google-таблица, один HTML.</p><div class="cta"><a class="btn primary" href="https://github.com/Vladislav352/finpulse">Код на GitHub</a><a class="btn" href="demo/">Живое демо</a></div></div><div class="frame"><img src="finpulse-top.png" alt="Фин.пульс: главный экран" loading="eager"></div></header>
+<div class="hr"></div>
+<section id="inside"><div class="wrap"><h2>Что внутри</h2><p class="lead">Факт из API, план от команды, сравнение на одной странице, которая открывается без интернета.</p><div class="bento"><div class="tile c2 grad"><div class="num">5</div><h3>кабинетов</h3><p>Wildberries, Ozon и Яндекс Маркет двух юрлиц в одной сводке.</p></div><div class="tile img c4 img"><img src="finpulse.png" alt=""><div class="cap"><h3>Месяц, год, семейства, остатки</h3><p>Полоса плана, пересчитанного на прошедшие дни, засечки целей, убыточные семейства выделены.</p></div></div><div class="tile c3 steel"><h3>Таблица-канон</h3><p>Робот пишет листы TS_…, команда ведёт план, товар в пути и розницу. Один источник для всех.</p></div><div class="tile c3"><h3>Граница автоматизации видна</h3><p>Блок «источники данных»: что подключено, что демо, что следующим шагом.</p></div></div></div></section>
+<div class="hr"></div>
+<section id="how"><div class="wrap"><h2>Как устроено</h2><p class="lead">Четыре скрипта и запуск по расписанию. Графики рисуются как inline-SVG, без JS-библиотек.</p><div class="diagram"><pre class="mermaid">flowchart LR
+  L[launchd 07:40 и 13:40] --&gt; R[run_finpulse.py]
+  R --&gt; T[truestats_pull.py&lt;br/&gt;факт по SKU, кабинетам, месяцам, остаткам]
+  R --&gt; O[onec_pull.py&lt;br/&gt;1С OData, только GET]
+  T --&gt; GS[(Google-таблица&lt;br/&gt;листы TS_…)]
+  O --&gt; GS
+  GS --&gt; B[build_finpulse.py&lt;br/&gt;план + факт → finpulse.html]
+  T --&gt; B
+  B --&gt; F[ftp_deploy.py&lt;br/&gt;FTPS-зеркало]
+  F --&gt; S[сайт под паролем]</pre></div><div class="tags" style="margin-top:22px"><span class="tag">Python</span><span class="tag">TrueStats API</span><span class="tag">Google Sheets API</span><span class="tag">1С OData</span><span class="tag">inline SVG</span><span class="tag">FTPS</span><span class="tag">launchd</span></div></div></section>
+<div class="hr"></div><section id="screens"><div class="wrap"><h2>Экраны</h2><p class="lead">Настоящие данные; названия компаний и брендов заменены.</p><div class="gallery"><figure class="wide"><div class="frame"><img src="finpulse.png" alt="Полная страница: месяц на сегодня, двенадцать месяцев, разрезы, остатки" loading="lazy"></div><figcaption>Полная страница: месяц на сегодня, двенадцать месяцев, разрезы, остатки</figcaption></figure></div></div></section>
+<div class="hr"></div>
+<section id="hard"><div class="wrap"><h2>Что было сложного</h2><div class="hard"><div><b>План и факт жили в разных местах</b><p>Таблица-канон: робот заполняет свои листы, люди свои, дашборд читает обе части.</p></div><div><b>Себестоимость в карточках сервиса аналитики</b><p>Сверена с финдиректором, в тексте страницы явно сказано, когда она может отличаться от себестоимости проданного.</p></div><div><b>Хостинг банит SSH</b><p>Публикация переведена на FTPS с переиспользованием TLS-сессии, rsync оставлен как запасной путь.</p></div></div></div></section>
+<footer><div class="wrap"><div>Владислав Арсентьев, AI-интегратор · <a href="https://t.me/Skit888">@Skit888</a></div><div><a href="https://vladislav352.github.io/wb-monitor/">WB-монитор</a> · <a href="https://vladislav352.github.io/regbot/">РегБот</a> · <a href="https://vladislav352.github.io/command-center/">Командный центр</a> · <a href="https://vladislav352.github.io/DocChecker/">DocChecker</a></div></div></footer></body></html>
