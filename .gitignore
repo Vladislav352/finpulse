@@ -1,0 +1,16 @@
+# секреты, выгрузки и результаты — никогда в репозиторий
+deploy.env
+*_last_pull.json
+*_cache.json
+*_dump_*.json
+*_openapi_*.json
+corp_drive_ids.json
+1c_metadata*.xml
+1c_metadata_summary.md
+*.log
+*.html
+*.pdf
+site/
+__pycache__/
+*.bak*
+.DS_Store
